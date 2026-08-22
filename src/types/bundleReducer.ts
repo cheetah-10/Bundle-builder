@@ -1,5 +1,5 @@
 import type { CartItem } from "./cartItem";
-import type { Product } from "./Product";
+import type { Product } from "./product";
 import type { Variant } from "./variant";
 
 export interface BundleReducerState {

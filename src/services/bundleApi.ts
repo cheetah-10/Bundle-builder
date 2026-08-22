@@ -1,5 +1,5 @@
 import type { CartItem } from "../types/cartItem";
-import type { Product } from "../types/Product";
+import type { Product } from "../types/product";
 import type { Step } from "../types/step";
 
 const BASE_URL = 'http://localhost:5000/api';

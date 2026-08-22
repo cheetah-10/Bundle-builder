@@ -16,13 +16,8 @@ export const BundleBuilder: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <header className="mb-8 text-center md:text-right">
-        <h1 className="text-3xl font-extrabold text-slate-900">مصمم الباقات المخصص</h1>
-        <p className="text-gray-500 mt-2">قم باختيار المنتجات المناسبة لبناء باقتك الخاصة بسهولة</p>
-      </header>
-
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
+    <div className="bundle-shell">
+      <div className="bundle-layout">
         <Builder />
         <ReviewPanel />
       </div>

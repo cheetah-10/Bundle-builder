@@ -1,39 +1,91 @@
 import React from 'react';
+import { useBundle } from '../context/BundleContext';
 import { useBundleCalculations } from '../hooks/useBundleCalculations';
+import { QuantityStepper } from './QuantityStepper';
 
 export const ReviewPanel: React.FC = () => {
+  const { cartItems, products, dispatch } = useBundle();
   const { subtotal, totalDiscount, finalTotal, totalItemsCount } = useBundleCalculations();
 
-  return (
-    <div className="w-full lg:w-96 bg-white p-6 rounded-xl border border-gray-200 shadow-sm h-fit sticky top-6 space-y-6">
-      <h2 className="text-xl font-bold text-slate-900 border-b pb-4">ملخص الباقة</h2>
+  // تجميع العناصر المحددة فعلياً (كميتها أكبر من 0)
+  const selectedCartItems = Object.values(cartItems).filter((item) => item.quantity > 0);
 
-      <div className="space-y-3 text-sm">
-        <div className="flex justify-between text-gray-600">
-          <span>عدد العناصر المختارة:</span>
-          <span className="font-semibold text-slate-800">{totalItemsCount}</span>
-        </div>
-        <div className="flex justify-between text-gray-600">
-          <span>المجموع الفرعي:</span>
-          <span className="font-semibold text-slate-800">${subtotal.toFixed(2)}</span>
+  return (
+    <aside className="review-panel">
+      <div className="review-heading">
+        <span className="review-kicker">REVIEW</span>
+        <h2>Your security system</h2>
+        <p>Review your personalized protection system designed to keep what matters most safe.</p>
+      </div>
+
+      {/* قائمة المنتجات المضافة للمراجعة */}
+      <div className="review-items">
+        {selectedCartItems.length === 0 ? (
+          <p className="review-empty">No products selected yet</p>
+        ) : (
+          selectedCartItems.map((item) => {
+            const product = products.find((p) => p.id === item.productId);
+            if (!product) return null;
+
+            const variant = product.variants?.find((v) => v.id === item.variantId);
+            const title = variant ? `${product.title} (${variant.name})` : product.title;
+            const price = variant?.price ?? product.price;
+
+            return (
+              <div key={item.cartItemId} className="review-item">
+                <div className="review-item-image">
+                  <img src={item.image} alt="" />
+                </div>
+                <div className="review-item-copy">
+                  <h5>{title}</h5>
+                  <span>${price.toFixed(2)}</span>
+                </div>
+
+                <QuantityStepper
+                  size="sm"
+                  quantity={item.quantity}
+                  onIncrement={() =>
+                    dispatch({
+                      type: 'INCREMENT_QUANTITY',
+                      payload: { product, variant: variant || undefined },
+                    })
+                  }
+                  onDecrement={() =>
+                    dispatch({
+                      type: 'DECREMENT_QUANTITY',
+                      payload: { product, variant: variant || undefined },
+                    })
+                  }
+                />
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Totals Breakdown */}
+      <div className="review-totals">
+        <div className="review-total-row">
+          <span>Subtotal</span>
+          <span>${subtotal.toFixed(2)}</span>
         </div>
         {totalDiscount > 0 && (
-          <div className="flex justify-between text-emerald-600 font-medium">
-            <span>الخصم المطبق:</span>
+          <div className="review-total-row discount-row">
+            <span>Discount</span>
             <span>-${totalDiscount.toFixed(2)}</span>
           </div>
         )}
-        <div className="border-t pt-3 flex justify-between text-base font-bold text-slate-900">
-          <span>الإجمالي النهائي:</span>
-          <span className="text-indigo-600">${finalTotal.toFixed(2)}</span>
+        <div className="review-total-row final-row">
+          <span>Total</span>
+          <span>${finalTotal.toFixed(2)}</span>
         </div>
       </div>
 
       <button
         disabled={totalItemsCount === 0}
-        className="w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors shadow-sm"
+        className="checkout-button"
       >
-        متابعة للشراء
+        Checkout
       </button>
     </div>
   );

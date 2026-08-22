@@ -1,7 +1,7 @@
 import initialStateData from '../data/initialState.json';
 import type { BundleAction, BundleReducerState } from '../types/bundleReducer';
 import type { CartItem } from '../types/cartItem';
-import type { Product } from '../types/Product';
+import type { Product } from '../types/product';
 import type { Variant } from '../types/variant';
 
 export const getItemKey = (productId: string, variantId?: string) => {

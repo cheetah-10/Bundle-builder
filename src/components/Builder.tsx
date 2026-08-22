@@ -19,7 +19,7 @@ export const Builder: React.FC = () => {
   }
 
   return (
-    <div className="flex-1">
+    <div className="builder-column">
       {steps.map((step) => {
         const isOpen = activeStepId === step.id;
         const stepProducts = products.filter(
@@ -36,13 +36,22 @@ export const Builder: React.FC = () => {
             isOpen={isOpen}
             selectedCount={selectedCount}
             totalSteps={steps.length}
-            onToggle={() => dispatch({ type: 'SET_ACTIVE_STEP', payload: step.id })}
+            onToggle={() => dispatch({ type: 'TOGGLE_STEP', payload: { stepId: step.id } })}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="product-grid">
               {stepProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
+            {isOpen && step.order < totalSteps && (
+              <button
+                type="button"
+                onClick={() => dispatch({ type: 'OPEN_STEP', payload: { stepId: steps[step.order].id } })}
+                className="next-step-button"
+              >
+                Next: {steps[step.order].title}
+              </button>
+            )}
           </StepAccordion>
         );
       })}

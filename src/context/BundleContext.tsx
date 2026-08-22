@@ -2,7 +2,7 @@ import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { bundleReducer } from './BundleReducer';
 import { useBundleConfigQuery } from '../hooks/useBundleQueries';
 import type { Step } from '../types/step';
-import type { Product } from '../types/Product';
+import type { Product } from '../types/product';
 import type { CartItem } from '../types/cartItem';
 
 interface BundleContextType {

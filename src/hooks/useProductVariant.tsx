@@ -1,21 +1,37 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useBundle } from '../context/BundleContext';
+import type { Product } from '../types/product';
 import type { Variant } from '../types/variant';
-import type { Product } from '../types/Product';
 
 export const useProductVariantLogic = (product: Product) => {
   const { cartItems, dispatch } = useBundle();
 
+  // اختيار أول Variant افتراضياً لو للمنتج variants
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(
     product.variants && product.variants.length > 0 ? product.variants[0] : null
   );
 
+  // البحث المرن عن كمية المنتج من الـ cartItems
   const currentQuantity = useMemo(() => {
-    const variantId = selectedVariant?.id;
+    // 1. تجربة البحث بالمفتاح المركب (productId-variantId)
+    if (selectedVariant?.id) {
+      const variantKey = `${product.id}-${selectedVariant.id}`;
+      if (cartItems[variantKey]) return cartItems[variantKey].quantity;
+    }
 
-    const itemKey = variantId ? `${product.id}-${variantId}` : product.id;
-    
-    return cartItems[itemKey]?.quantity || 0;
+    // 2. تجربة البحث بمفتاح المنتج المباشر (productId)
+    if (cartItems[product.id]) {
+      return cartItems[product.id].quantity;
+    }
+
+    // 3. البحث في عناصر السلة عن أي عنصر يطابق الـ productId والـ variantId
+    const foundItem = Object.values(cartItems).find(
+      (item) =>
+        item.productId === product.id &&
+        (!selectedVariant || item.variantId === selectedVariant.id)
+    );
+
+    return foundItem ? foundItem.quantity : 0;
   }, [cartItems, product.id, selectedVariant]);
 
   const handleSelectVariant = useCallback((variant: Variant) => {
@@ -24,24 +40,23 @@ export const useProductVariantLogic = (product: Product) => {
 
   const handleIncrement = useCallback(() => {
     dispatch({
-      type: 'ADD_ITEM',
+      type: 'INCREMENT_QUANTITY',
       payload: {
         product,
         variant: selectedVariant,
-        quantity: 1,
       },
     });
   }, [dispatch, product, selectedVariant]);
 
   const handleDecrement = useCallback(() => {
     dispatch({
-      type: 'REMOVE_ITEM',
+      type: 'DECREMENT_QUANTITY',
       payload: {
-        productId: product.id,
-        variantId: selectedVariant?.id,
+        product,
+        variant: selectedVariant,
       },
     });
-  }, [dispatch, product.id, selectedVariant]);
+  }, [dispatch, product, selectedVariant]);
 
   return {
     selectedVariant,

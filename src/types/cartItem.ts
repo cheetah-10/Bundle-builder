@@ -1,5 +1,5 @@
 export interface CartItem {
-  cartItemId: string;   // مفتاح فريد: `${productId}_${variantId || 'default'}`
+  cartItemId: string;   // `${productId}_${variantId || 'default'}`
   productId: string;
   variantId?: string;
   productTitle: string;
