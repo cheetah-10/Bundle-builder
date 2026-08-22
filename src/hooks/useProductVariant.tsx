@@ -1,43 +1,51 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useBundle } from '../context/BundleContext';
-import type { Product } from '../types/Product';
 import type { Variant } from '../types/variant';
+import type { Product } from '../types/Product';
 
 export const useProductVariantLogic = (product: Product) => {
-  const { cartItems, getVariantQuantity, incrementQuantity, decrementQuantity } = useBundle();
+  const { cartItems, dispatch } = useBundle();
 
-  const defaultVariant = product.variants && product.variants.length > 0 
-    ? product.variants[0] 
-    : undefined;
-
-  const [selectedVariant, setSelectedVariant] = useState<Variant | undefined>(defaultVariant);
+  const [selectedVariant, setSelectedVariant] = useState<Variant | null>(
+    product.variants && product.variants.length > 0 ? product.variants[0] : null
+  );
 
   const currentQuantity = useMemo(() => {
-    return getVariantQuantity(product.id, selectedVariant?.id);
-  }, [cartItems, product.id, selectedVariant?.id, getVariantQuantity]);
+    const variantId = selectedVariant?.id;
 
-  const totalProductQuantity = useMemo(() => {
-    return Object.values(cartItems)
-      .filter((item) => item.productId === product.id)
-      .reduce((sum, item) => sum + item.quantity, 0);
-  }, [cartItems, product.id]);
+    const itemKey = variantId ? `${product.id}-${variantId}` : product.id;
+    
+    return cartItems[itemKey]?.quantity || 0;
+  }, [cartItems, product.id, selectedVariant]);
 
-  const handleIncrement = () => {
-    incrementQuantity(product, selectedVariant);
-  };
-
-  const handleDecrement = () => {
-    decrementQuantity(product, selectedVariant);
-  };
-
-  const handleSelectVariant = (variant: Variant) => {
+  const handleSelectVariant = useCallback((variant: Variant) => {
     setSelectedVariant(variant);
-  };
+  }, []);
+
+  const handleIncrement = useCallback(() => {
+    dispatch({
+      type: 'ADD_ITEM',
+      payload: {
+        product,
+        variant: selectedVariant,
+        quantity: 1,
+      },
+    });
+  }, [dispatch, product, selectedVariant]);
+
+  const handleDecrement = useCallback(() => {
+    dispatch({
+      type: 'REMOVE_ITEM',
+      payload: {
+        productId: product.id,
+        variantId: selectedVariant?.id,
+      },
+    });
+  }, [dispatch, product.id, selectedVariant]);
 
   return {
     selectedVariant,
     currentQuantity,
-    totalProductQuantity,
     handleSelectVariant,
     handleIncrement,
     handleDecrement,

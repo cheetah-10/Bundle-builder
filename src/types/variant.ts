@@ -1,10 +1,10 @@
 export interface Variant {
     id: string;
     name: string;
-    // price?: number;
+    price?: number;
     hex?: string;
-    thumnail?: string;
-    // compareAtPrice?: number;
+    image?: string;
+    compareAtPrice?: number;
     isSelected: boolean;
     onClick: () => void;
 }
