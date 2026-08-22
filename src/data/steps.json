@@ -1,0 +1,30 @@
+[
+    {
+        "id": "step-1",
+        "order": 1,
+        "title": "Choose your cameras",
+        "subtitle": "STEP 1 OF 4",
+        "category": "cameras"
+    },
+    {
+        "id": "step-2",
+        "order": 2,
+        "title": "Choose your plan",
+        "subtitle": "STEP 2 OF 4",
+        "category": "plan"
+    },
+    {
+        "id": "step-3",
+        "order": 3,
+        "title": "Choose your sensors",
+        "subtitle": "STEP 3 OF 4",
+        "category": "sensors"
+    },
+    {
+        "id": "step-4",
+        "order": 4,
+        "title": "Add extra protection",
+        "subtitle": "STEP 4 OF 4",
+        "category": "accessories"
+    }
+]
