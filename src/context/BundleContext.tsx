@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { bundleReducer } from './BundleReducer';
 import { useBundleConfigQuery } from '../hooks/useBundleQueries';
+import initialStateData from '../data/initialState.json';
 import type { Step } from '../types/step';
 import type { Product } from '../types/product';
 import type { CartItem } from '../types/cartItem';
+import { loadBundle, saveBundle } from '../utils/storage';
 
 interface BundleContextType {
   steps: Step[];
@@ -13,6 +15,7 @@ interface BundleContextType {
   isLoading: boolean;
   error: Error | null;
   dispatch: React.Dispatch<any>;
+  saveCurrentBundle: () => void;
 }
 
 export const BundleContext = createContext<BundleContextType | undefined>(undefined);
@@ -20,19 +23,25 @@ export const BundleContext = createContext<BundleContextType | undefined>(undefi
 export const BundleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { data, isLoading, error } = useBundleConfigQuery();
 
-  const [state, dispatch] = useReducer(bundleReducer, {
-    activeStepId: 'step-1',
-    cartItems: {},
-  });
+  const [state, dispatch] = useReducer(
+    bundleReducer,
+    undefined,
+    () => ({
+      activeStepId: 'step-1',
+      cartItems: loadBundle() ?? (initialStateData as Record<string, CartItem>),
+    })
+  );
 
   useEffect(() => {
-    if (data?.data?.initialCartState) {
+    if (data?.data?.initialCartState && loadBundle() === null) {
       dispatch({
         type: 'LOAD_SAVED_BUNDLE',
         payload: data.data.initialCartState,
       });
     }
   }, [data]);
+
+  const saveCurrentBundle = () => saveBundle(state.cartItems);
 
   return (
     <BundleContext.Provider
@@ -44,6 +53,7 @@ export const BundleProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         isLoading,
         error: error as Error | null,
         dispatch,
+        saveCurrentBundle,
       }}
     >
       {children}

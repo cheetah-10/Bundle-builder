@@ -43,7 +43,7 @@ export const Builder: React.FC = () => {
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-            {isOpen && step.order < totalSteps && (
+            {isOpen && step.order < steps.length && (
               <button
                 type="button"
                 onClick={() => dispatch({ type: 'OPEN_STEP', payload: { stepId: steps[step.order].id } })}

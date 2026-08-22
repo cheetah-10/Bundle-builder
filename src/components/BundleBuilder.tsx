@@ -9,7 +9,7 @@ export const BundleBuilder: React.FC = () => {
   if (error) {
     return (
       <div className="max-w-4xl mx-auto my-12 p-6 bg-red-50 border border-red-200 rounded-xl text-red-700 text-center">
-        <p className="font-semibold">حدث خطأ أثناء تحميل البيانات:</p>
+        <p className="font-semibold">error fetching data</p>
         <p className="text-sm mt-1">{error.message}</p>
       </div>
     );

@@ -2,9 +2,11 @@ import React from 'react';
 import { useBundle } from '../context/BundleContext';
 import { useBundleCalculations } from '../hooks/useBundleCalculations';
 import { QuantityStepper } from './QuantityStepper';
+import toast from 'react-hot-toast';
 
 export const ReviewPanel: React.FC = () => {
-  const { cartItems, products, dispatch } = useBundle();
+  const [showCheckoutConfirmation, setShowCheckoutConfirmation] = React.useState(false);
+  const { cartItems, products, dispatch, saveCurrentBundle } = useBundle();
   const { subtotal, totalDiscount, finalTotal, totalItemsCount } = useBundleCalculations();
 
   // تجميع العناصر المحددة فعلياً (كميتها أكبر من 0)
@@ -82,11 +84,35 @@ export const ReviewPanel: React.FC = () => {
       </div>
 
       <button
+        type="button"
         disabled={totalItemsCount === 0}
         className="checkout-button"
+        onClick={() => setShowCheckoutConfirmation(true)}
       >
         Checkout
       </button>
-    </div>
+      {showCheckoutConfirmation && (
+        <div className="checkout-confirmation" role="status">
+          <span>Your checkout would continue here.</span>
+          <button
+            type="button"
+            className="checkout-confirmation-close"
+            onClick={() => setShowCheckoutConfirmation(false)}
+          >
+            Close
+          </button>
+        </div>
+      )}
+      <button
+        type="button"
+        className="save-bundle-button"
+        onClick={() => {
+          saveCurrentBundle();
+          toast.success('Your system has been saved.');
+        }}
+      >
+        Save my system for later
+      </button>
+    </aside>
   );
 };

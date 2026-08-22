@@ -26,9 +26,9 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
       {/* Upper Portion */}
       <div className="product-main">
         <div className="product-image-wrap">
-          {product.discountBadge && (
+          {product.discount && (
             <span className="discount-badge">
-              {product.discountBadge}
+              Save {product.discount}%
             </span>
           )}
           <img

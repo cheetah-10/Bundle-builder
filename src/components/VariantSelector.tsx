@@ -15,9 +15,8 @@ export const VariantSelector: React.FC<VariantSelectorProps> = React.memo(({
   if (!variants || variants.length === 0) return null;
 
   return (
-    <div className="space-y-1.5 pt-2 border-t border-gray-100">
-      <span className="text-xs font-medium text-gray-600">الخيارات المتاحة:</span>
-      <div className="flex flex-wrap gap-2">
+    <div className="variant-selector">
+      <div className="variant-list">
         {variants.map((variant) => {
           const isSelected = selectedVariant?.id === variant.id;
           return (
@@ -25,10 +24,10 @@ export const VariantSelector: React.FC<VariantSelectorProps> = React.memo(({
               key={variant.id}
               type="button"
               onClick={() => onSelectVariant(variant)}
-              className={`px-3 py-1 rounded-md text-xs font-medium border transition-all ${
+              className={`variant-button ${
                 isSelected
-                  ? 'border-indigo-600 bg-indigo-50 text-indigo-700 font-bold shadow-xs'
-                  : 'border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300'
+                  ? 'variant-button-selected'
+                  : 'variant-button-unselected'
               }`}
             >
               {variant.name}
