@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+//BundleContext.tsx
+import React, { createContext, useContext, useReducer, useEffect, useRef } from 'react';
 import { bundleReducer } from './BundleReducer';
 import { useBundleConfigQuery } from '../hooks/useBundleQueries';
-import initialStateData from '../data/initialState.json';
 import type { Step } from '../types/step';
 import type { Product } from '../types/product';
 import type { CartItem } from '../types/cartItem';
@@ -22,22 +22,21 @@ export const BundleContext = createContext<BundleContextType | undefined>(undefi
 
 export const BundleProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { data, isLoading, error } = useBundleConfigQuery();
+  const hasInitialisedBundle = useRef(loadBundle() !== null);
 
   const [state, dispatch] = useReducer(
     bundleReducer,
     undefined,
     () => ({
       activeStepId: 'step-1',
-      cartItems: loadBundle() ?? (initialStateData as Record<string, CartItem>),
+      cartItems: loadBundle() ?? {},
     })
   );
 
   useEffect(() => {
-    if (data?.data?.initialCartState && loadBundle() === null) {
-      dispatch({
-        type: 'LOAD_SAVED_BUNDLE',
-        payload: data.data.initialCartState,
-      });
+    if (!hasInitialisedBundle.current && data?.data?.products) {
+      dispatch({ type: 'LOAD_DEFAULT_BUNDLE', payload: data.data.products });
+      hasInitialisedBundle.current = true;
     }
   }, [data]);
 

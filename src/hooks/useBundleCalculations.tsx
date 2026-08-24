@@ -1,6 +1,9 @@
+//useBundleCalculations.tsx
 import { useMemo } from 'react';
 import { useBundle } from '../context/BundleContext';
 import type { CartItem } from '../types/cartItem';
+
+export const FAST_SHIPPING_PRICE = 5.99;
 
 export interface BundleCalculations {
   selectedItems: CartItem[];
@@ -10,6 +13,8 @@ export interface BundleCalculations {
   originalTotal: number;
   totalDiscount: number;
   finalTotal: number;
+  totalWithShipping: number;
+  fastShippingPrice: number;
   getStepSelectedCount: (stepId: string) => number;
   getStepItemsCount: (stepId: string) => number;
 }
@@ -52,7 +57,7 @@ export const useBundleCalculations = (): BundleCalculations => {
     return discount > 0 ? discount : 0;
   }, [originalTotal, subtotal]);
 
-  const finalTotal = subtotal; 
+  const finalTotal = subtotal;
 
   const getStepSelectedCount = (stepId: string): number => {
     const stepProducts = products.filter((p) => p.stepId === stepId);
@@ -85,6 +90,8 @@ export const useBundleCalculations = (): BundleCalculations => {
     originalTotal,
     totalDiscount,
     finalTotal,
+    totalWithShipping: finalTotal,
+    fastShippingPrice: FAST_SHIPPING_PRICE,
     getStepSelectedCount,
     getStepItemsCount,
   };

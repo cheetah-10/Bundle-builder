@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Builder } from './Builder';
 import { ReviewPanel } from './ReviewPanel';
@@ -16,11 +17,12 @@ export const BundleBuilder: React.FC = () => {
   }
 
   return (
-    <div className="bundle-shell">
-      <div className="bundle-layout">
+    <div className="min-h-screen relative md:mx-10 md:top-[49.39px] lg:mx-20 xl:mx-30.5 bg-[#f7f7f8] px-2 py-4 md:px-[7.5%] lg:px-6 lg:py-4">
+      <div className="mx-auto grid items-start gap-5 grid-cols-1 xl:grid-cols-[minmax(0,1fr)_284px]">
         <Builder />
         <ReviewPanel />
       </div>
     </div>
   );
 };
+

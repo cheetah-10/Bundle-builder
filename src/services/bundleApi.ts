@@ -1,15 +1,13 @@
-import type { CartItem } from "../types/cartItem";
+//bundleApi.ts
 import type { Product } from "../types/product";
 import type { Step } from "../types/step";
 
-const BASE_URL = 'http://localhost:5000/api';
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export interface BundleConfigResponse {
   success: boolean;
   data: {
     steps: Step[];
     products: Product[];
-    initialCartState: Record<string, CartItem>;
   };
 }
 

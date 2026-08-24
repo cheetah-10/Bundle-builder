@@ -6,7 +6,7 @@ import { ProductCard } from './ProductCard';
 
 export const Builder: React.FC = () => {
   const { steps, products, activeStepId, dispatch, isLoading } = useBundle();
-  const { getStepItemsCount } = useBundleCalculations(); 
+  const { getStepSelectedCount } = useBundleCalculations();
 
   if (isLoading) {
     return (
@@ -19,15 +19,24 @@ export const Builder: React.FC = () => {
   }
 
   return (
-    <div className="builder-column">
+    <div className="min-w-0 xl:sticky xl:top-5">
       {steps.map((step) => {
         const isOpen = activeStepId === step.id;
+
+        const stepCategory = step.category.toLowerCase().trim();
+
         const stepProducts = products.filter(
-          (p) => p.category.toLowerCase().trim() === step.category.toLowerCase().trim()
+          (product) =>
+            product.category.toLowerCase().trim() === stepCategory
         );
-        
-        // 👈 جلب العدد مباشرة بـ step.id
-        const selectedCount = getStepItemsCount(step.id);
+
+        const selectedCount = getStepSelectedCount(step.id);
+
+        const currentStepIndex = steps.findIndex(
+          (currentStep) => currentStep.id === step.id
+        );
+
+        const nextStep = steps[currentStepIndex + 1];
 
         return (
           <StepAccordion
@@ -36,20 +45,33 @@ export const Builder: React.FC = () => {
             isOpen={isOpen}
             selectedCount={selectedCount}
             totalSteps={steps.length}
-            onToggle={() => dispatch({ type: 'TOGGLE_STEP', payload: { stepId: step.id } })}
+            onToggle={() =>
+              dispatch({
+                type: 'TOGGLE_STEP',
+                payload: { stepId: step.id },
+              })
+            }
           >
-            <div className="product-grid">
+            <div className="grid grid-cols-1 gap-3.75 md:max-xl:grid-cols-2 xl:grid-cols-2">
               {stepProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-            {isOpen && step.order < steps.length && (
+
+            {isOpen && nextStep && (
               <button
                 type="button"
-                onClick={() => dispatch({ type: 'OPEN_STEP', payload: { stepId: steps[step.order].id } })}
-                className="next-step-button"
+                onClick={() =>
+                  dispatch({
+                    type: 'OPEN_STEP',
+                    payload: {
+                      stepId: nextStep.id,
+                    },
+                  })
+                }
+                className="mx-auto mt-3.75 block rounded-[7px] border border-[#4E2FD2] bg-transparent px-6 py-1.25 text-[18px] leading-6 font-normal text-[#4E2FD2]"
               >
-                Next: {steps[step.order].title}
+                Next: {nextStep.title}
               </button>
             )}
           </StepAccordion>

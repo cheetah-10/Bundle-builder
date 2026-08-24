@@ -14,4 +14,5 @@ export type BundleAction =
   | { type: 'OPEN_STEP'; payload: { stepId: string } }
   | { type: 'TOGGLE_STEP'; payload: { stepId: string } }
   | { type: 'LOAD_SAVED_BUNDLE'; payload: Record<string, CartItem> }
+  | { type: 'LOAD_DEFAULT_BUNDLE'; payload: Product[] }
   | { type: 'RESET_BUNDLE' };

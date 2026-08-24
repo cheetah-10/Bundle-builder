@@ -1,14 +1,14 @@
 export interface BundleItem {
-  productId: string;     // id المنتج الأصلي (e.g., "cam-outdoor")
-  variantId?: string;    // id اللون لو موجود (e.g., "v-red")
-  productTitle: string;  // اسم المنتج للعرض (e.g., "Outdoor Camera")
-  variantName?: string;  // اسم اللون للعرض (e.g., "Red")
-  price: number;         // سعر قطعة واحدة من هذا الـ variant
-  image: string;         // صورة الـ Thumbnail الخاصة بالعنصر في الـ Review Panel
-  category: string;      // الفئة (Cameras, Sensors, Plan...) عشان التجميعة في الـ Review Panel
-  quantity: number;      // الكمية المختارة (لازم تكون أكتر من 0)
+  productId: string;     // Original product ID (e.g., "cam-outdoor")
+  variantId?: string;    // Variant ID when applicable (e.g., "v-red")
+  productTitle: string;  // Product title shown in the UI
+  variantName?: string;  // Variant name shown in the UI
+  price: number;         // Price for one unit of this variant
+  image: string;         // Thumbnail shown in the review panel
+  category: string;      // Product category used by the review panel
+  quantity: number;      // Selected quantity, always greater than zero
 }
 
-// الـ Bundle Selection الكامل بيكون عبارة عن قائمة أو Map بالمنتجات دي:
+// The complete bundle selection is a list or map of these products.
 export type BundleSelection = Record<string, BundleItem>;
-// المفتاح (Key) بيكون تركيب فريد بين المنتج واللون، مثل: "cam-outdoor_v-red"
+// The key combines product and variant IDs, e.g. "cam-outdoor_v-red".

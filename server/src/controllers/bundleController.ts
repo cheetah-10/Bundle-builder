@@ -1,4 +1,4 @@
-import { bundleSteps, bundleProducts, initialCartState } from './../data/bundleData.js';
+import { bundleSteps, bundleProducts } from './../data/bundleData.js';
 import { type Request, type Response } from 'express';
 
 
@@ -26,19 +26,6 @@ export const getProducts = (_req: Request, res: Response) => {
   }
 };
 
-export const getInitialCart = (_req: Request, res: Response) => {
-  try {
-    res.status(200).json({ success: true, data: initialCartState });
-
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to fetch initial cart'
-    });
-  }
-};
-
-
 // GET /api/bundle-config
 export const getBundleConfig = (_req: Request, res: Response) => {
   try {
@@ -46,8 +33,7 @@ export const getBundleConfig = (_req: Request, res: Response) => {
       success: true,
       data: {
         steps: bundleSteps,
-        products: bundleProducts,
-        initialCartState: initialCartState
+        products: bundleProducts
       }
     });
   } catch (error) {

@@ -1,7 +1,7 @@
 import type { CartItem } from "./cartItem";
 
-// 5. حالة النظام الكاملة (عشان الـ LocalStorage والـ State)
+// Complete system state used by localStorage and application state.
 export interface SystemState {
-  selectedItems: Record<string, CartItem>; // قائمة العناصر المختارة
-  activeStepId: string;                    // الخطوة المفتوحة حالياً في الـ Accordion
+  selectedItems: Record<string, CartItem>; // Selected bundle items
+  activeStepId: string;                    // Currently open accordion step
 }

@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'node:path';
 import bundleRoutes from './routes/bundleRoutes.js';
 
 const app = express();
@@ -8,6 +9,7 @@ const PORT = process.env.PORT || 5000;
 // Middlewares
 app.use(cors({ origin: '*' })); 
 app.use(express.json());
+app.use('/assets', express.static(path.resolve(process.cwd(), 'src/assets')));
 
 // Routes
 app.use('/api', bundleRoutes);
