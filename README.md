@@ -1,5 +1,3 @@
-
-````
 # Bundle Builder
 
 A multi-step product bundle builder built as a frontend take-home project. Shoppers configure a security system through a 4-step accordion (cameras → plan → sensors → extra protection), while a live review panel keeps selected items, quantities, variants, and pricing in sync.
@@ -184,6 +182,4 @@ Variant quantities are tracked independently using a product/variant key, allowi
 * Add a root-level command to run frontend and backend together.
 * Expand accessibility and keyboard interaction testing.
 * Add more comprehensive API error/loading states.
-
-````
 
